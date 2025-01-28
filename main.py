@@ -4,6 +4,8 @@ import torch.distributed as dist
 import torch.nn as nn
 import torch.optim as optim
 
+from datetime import timedelta
+
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 class ToyModel(nn.Module):
@@ -19,7 +21,7 @@ class ToyModel(nn.Module):
 
 def demo_basic():
     torch.cuda.set_device(int(os.environ["LOCAL_RANK"]))
-    dist.init_process_group("nccl")
+    dist.init_process_group("nccl", timeout=timedelta(seconds=10))
     rank = dist.get_rank()
     print(f"Start running basic DDP example on rank {rank}.")
     # create model and move it to GPU with id rank

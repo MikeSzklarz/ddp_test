@@ -1,9 +1,10 @@
 #!/bin/bash 
 
-#SBATCH --job-name=ddp_test_%j                   # Job name
+#SBATCH --job-name=ddp_test_%j                      # Job name
 #SBATCH --output=logs/slurm/job_%j.txt              # Output log
-#SBATCH --nodes=1                                   # Number of nodes
+#SBATCH --nodes=2                                   # Number of nodes
 #SBATCH --ntasks-per-node=1                         # Number of tasks to invoke on each node
+#SBATCH --gres=gpu:1                                # Number of GPUs per node
 #SBATCH --mem=65536                                 # Memory (64 GB)
 #SBATCH --time=30-00:00:00                          # Job time limit
 #SBATCH --partition=waccamaw                        # Partition to use
@@ -20,11 +21,15 @@ conda activate ddp_test
 export FI_MR_CACHE_MONITOR=userfaultfd
 export HDF5_USE_FILE_LOCKING=FALSE
 
-export MASTER_ADDR=$(hostname)
+export MASTER_ADDR=$(scontrol show hostname $SLURM_NODELIST | head -n1)
 export RANK=$SLURM_PROCID
 export LOCAL_RANK=$SLURM_LOCALID
 export WORLD_SIZE=$SLURM_NTASKS
 export MASTER_PORT=29500 # default from torch launcher
+
+export WORLD_SIZE=$SLURM_NTASKS  
+export RANK=$SLURM_PROCID        
+export LOCAL_RANK=$SLURM_LOCALID
 
 export NCCL_DEBUG=INFO
 export TORCH_CPP_LOG_LEVEL=INFO
