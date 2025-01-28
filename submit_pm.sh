@@ -3,8 +3,7 @@
 #SBATCH --job-name=ddp_test_%j                      # Job name
 #SBATCH --output=logs/slurm/job_%j.txt              # Output log
 #SBATCH --nodes=2                                   # Number of nodes
-#SBATCH --ntasks-per-node=1                         # Number of tasks to invoke on each node
-#SBATCH --gres=gpu:1                                # Number of GPUs per node
+#SBATCH --ntasks-per-node=1                         # Number of tasks to invoke on each node                               # Number of GPUs per node
 #SBATCH --mem=65536                                 # Memory (64 GB)
 #SBATCH --time=30-00:00:00                          # Job time limit
 #SBATCH --partition=waccamaw                        # Partition to use
@@ -38,8 +37,16 @@ export TORCH_DEISTRIBUTED_DEBUG=INFO
 # Having multiple gpus available when only one is avaiable causes issues
 export CUDA_VISIBLE_DEVICES=0
 
+# printing all env variables
+
+echo "MASTER_ADDR: $MASTER_ADDR"
+echo "RANK: $RANK"
+echo "LOCAL_RANK: $LOCAL_RANK"
+echo "WORLD_SIZE: $WORLD_SIZE"
+echo "MASTER_PORT: $MASTER_PORT"
+
 # Debugging mode
 set -x
 
 # Run the training script directly
-srun -u bash -c "python main.py"
+srun torchrun --nnodes=2 --nproc_per_node=1 --rdzv_id=1 --rdzv_backend=c10d --rdzv_endpoint=$MASTER_ADDR:$MASTER_PORT --rdzv_timeout=300 main.py
