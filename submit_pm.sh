@@ -15,7 +15,7 @@ mkdir -p ${LOGDIR}
 args="${@}"
 
 source /mnt/cidstore1/software/debian12/anaconda3/etc/profile.d/conda.sh
-conda activate test_ddp
+conda activate ddp_test
 
 export FI_MR_CACHE_MONITOR=userfaultfd
 export HDF5_USE_FILE_LOCKING=FALSE
