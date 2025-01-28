@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-#SBATCH --job-name=vit-era5_mn_%j                   # Job name
+#SBATCH --job-name=ddp_test_%j                   # Job name
 #SBATCH --output=logs/slurm/job_%j.txt              # Output log
 #SBATCH --nodes=1                                   # Number of nodes
 #SBATCH --ntasks-per-node=1                         # Number of tasks to invoke on each node
@@ -37,6 +37,4 @@ export CUDA_VISIBLE_DEVICES=0
 set -x
 
 # Run the training script directly
-srun -u bash -c "
-    $python main.py
-"
+srun -u bash -c "python main.py"
