@@ -14,7 +14,6 @@ LOGDIR=${PWD}/logs
 mkdir -p ${LOGDIR}
 args="${@}"
 
-# No Errors dont need extra file
 source /mnt/cidstore1/software/debian12/anaconda3/etc/profile.d/conda.sh
 conda activate test_ddp
 
@@ -39,5 +38,5 @@ set -x
 
 # Run the training script directly
 srun -u bash -c "
-    ${PROFILE_CMD} python train.py ${args}
+    $python main.py
 "
